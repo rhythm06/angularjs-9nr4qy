@@ -1,4 +1,113 @@
+<style>
+  #ul li {
+    display: inline;
+  }
+</style>
 <h1>Hello {{$ctrl.name}}!</h1>
-<p>
-  Start editing <b>home/home.html</b> :)
-</p>
+
+<div>
+  <ul id="ul">
+    <li>
+      <input type="checkbox" ng-model="$ctrl.male" />
+      Male
+    </li>
+    <li>
+      <input type="checkbox" ng-model="$ctrl.female" />
+      Female
+    </li>
+    <li>
+      <input ng-model="$ctrl.search" ng-model-options="{ debounce: 300 }" />
+    </li>
+  </ul>
+
+  <h1>Candidates</h1>
+  <table
+    style="width: 100%; padding: 20x; margin-top: 30px; margin-bottom: 30px"
+  >
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Gender</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        ng-repeat="row in $ctrl.data | filter: $ctrl.searchBy($ctrl.search)  | filter : $ctrl.filterByGender($ctrl.male, $ctrl.female) | orderBy : ['first_name', 'last_name']"
+      >
+        <td ng-bind="row.id"></td>
+        <td ng-bind="row.first_name"></td>
+        <td ng-bind="row.last_name"></td>
+        <td ng-bind="row.email"></td>
+        <td ng-bind="row.gender"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h1>Add New Candidate</h1>
+  <form name="candidateForm">
+    <ul style="list-style-type: none; width: 100%">
+      <li>
+        <ul id="ul" style="width: 100%">
+          <li>
+            <input
+              type="text"
+              placeholder="First Name"
+              name="first_name"
+              ng-model="$ctrl.newC.first_name"
+              required
+            />
+          </li>
+          <li>
+            <input
+              type="text"
+              placeholder="Last Name"
+              name="last_name"
+              ng-model="$ctrl.newC.last_name"
+              required
+            />
+          </li>
+        </ul>
+      </li>
+      <li>
+        <ul id="ul" style="width: 100%">
+          <li>
+            <input
+              type="text"
+              placeholder="Email"
+              name="email"
+              ng-model="$ctrl.newC.email"
+              type="email"
+              required
+            />
+          </li>
+        </ul>
+      </li>
+      <li>
+        <input
+          type="radio"
+          name="gender"
+          ng-model="$ctrl.newC.gender"
+          value="Male"
+          required
+        />
+        Male
+        <input
+          type="radio"
+          name="gender"
+          ng-model="$ctrl.newC.gender"
+          value="Female"
+          required
+        />Female
+        <button
+          ng-click="$ctrl.add();"
+          ng-disabled="candidateForm.$invalid && candidateForm.email.$error"
+        >
+          Add
+        </button>
+      </li>
+    </ul>
+  </form>
+</div>
